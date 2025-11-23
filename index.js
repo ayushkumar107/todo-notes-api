@@ -15,6 +15,7 @@ connectDB("mongodb://127.0.0.1:27017/todo1").then(()=>{
 //middleware
 
 app.use(express.urlencoded({extended:false}));
+app.use(express.json());
 
 //routes
 

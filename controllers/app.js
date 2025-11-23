@@ -52,9 +52,33 @@ async function handleDeleteTodo(req, res) {
   }
 }
 
+async function handleUpdateTODO(req, res) {
+  try {
+    const { title, description, isCompleted } = req.body;
+    const id = req.params.id;
+    const updateTodo = await List.findByIdAndUpdate(
+      id,
+      { title, description, isCompleted },
+      { new: true, runValidators: true }
+    );
+    if (!updateTodo) {
+      return res.status(404).json({ msg: "todo not found" });
+    }
+     
+    return res
+      .status(200)
+      .json({ msg: "todo updated successfully", data: updateTodo });
+  } catch (error) {
+    return res
+      .status(404)
+      .json({ msg: "error in updating TODO list", error: error.message });
+  }
+}
+
 module.exports = {
   handleCreateNewTodo,
   handleViewAllTODO,
   handleTodoToggleCompletion,
   handleDeleteTodo,
+  handleUpdateTODO,
 };

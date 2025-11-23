@@ -18,10 +18,20 @@ async function handleViewAllTODO(req,res) {
     const allTodo=await List.find({});
     return res.send(allTodo);
     
+};
+
+async function handleTodoToggleCompletion(req,res) {
+    const list= await List.findById(req.params.id);
+    
+    list.isCompleted=!list.isCompleted;
+
+    await list.save();
+    return res.status(200).json({message:"todo completion status updated"});
 }
 
 
 module.exports={
     handleCreateNewTodo,
     handleViewAllTODO,
+    handleTodoToggleCompletion,
 }

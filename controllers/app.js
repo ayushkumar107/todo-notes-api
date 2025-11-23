@@ -21,12 +21,17 @@ async function handleViewAllTODO(req,res) {
 };
 
 async function handleTodoToggleCompletion(req,res) {
-    const list= await List.findById(req.params.id);
+    try{
     
+    const list= await List.findById(req.params.id);
+    if(!list) return res.status(404).json({message:"todo id not founded"});
     list.isCompleted=!list.isCompleted;
 
     await list.save();
     return res.status(200).json({message:"todo completion status updated"});
+    }catch(error){
+        return res.status(500).json({message:"error updating status",error:error.message,})
+    }
 }
 
 

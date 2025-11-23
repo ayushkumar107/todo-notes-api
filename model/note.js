@@ -25,8 +25,8 @@ const noteSchema =new mongoose.Schema({
     timestamps:true
 })
 
-const list=mongoose.model("todo",noteSchema);
+const List=mongoose.model("todo",noteSchema);
 
 
 
-module.exports=list;
+module.exports=List;

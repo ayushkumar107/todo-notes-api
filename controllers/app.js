@@ -73,6 +73,27 @@ async function handleUpdateTODO(req, res) {
       .status(404)
       .json({ msg: "error in updating TODO list", error: error.message });
   }
+};
+
+
+async function handleViewCheckTodo(req,res) {
+  try{
+
+    const {completed}=req.query;
+
+    let filter={};
+
+    if(completed !==undefined){
+      filter.isCompleted=completed==="true";
+    }
+
+    const allTodo=await List.find(filter);
+
+    return res.status(200).json({msg:"filtered todo list successfully..",data:allTodo})
+
+  }catch(error){
+    return res.status(404).json({msg:"error in fetching todo",error:error.message});
+  }
 }
 
 module.exports = {
@@ -80,5 +101,5 @@ module.exports = {
   handleViewAllTODO,
   handleTodoToggleCompletion,
   handleDeleteTodo,
-  handleUpdateTODO,
+  handleUpdateTODO,handleViewCheckTodo,
 };

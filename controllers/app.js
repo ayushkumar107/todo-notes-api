@@ -94,6 +94,29 @@ async function handleViewCheckTodo(req,res) {
   }catch(error){
     return res.status(404).json({msg:"error in fetching todo",error:error.message});
   }
+};
+
+
+async function handleGetTodo(req,res){
+  try{
+    const {completed,page=1,limit=5}=req.query;
+    if(completed !==undefined){
+      filter.isCompleted=completed==="true";
+    
+    }
+
+    let filter={};
+    const skip=(page-1)*limit;
+
+    const allTodo=await List.find(filter).skip(skip).limit(limit);
+    
+    console.log(allTodo);
+    return res.status(200).json({msg:"paginated todo list fetched successfully",data:allTodo});
+
+
+  }catch(error){
+    return res.status(500).json({msg:"error in fetching todo list",error:error.message});
+  }
 }
 
 module.exports = {
@@ -101,5 +124,5 @@ module.exports = {
   handleViewAllTODO,
   handleTodoToggleCompletion,
   handleDeleteTodo,
-  handleUpdateTODO,handleViewCheckTodo,
+  handleUpdateTODO,handleViewCheckTodo,handleGetTodo,
 };

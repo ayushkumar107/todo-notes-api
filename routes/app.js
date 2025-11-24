@@ -6,7 +6,7 @@ const {
   handleViewAllTODO,
   handleTodoToggleCompletion,
   handleDeleteTodo,
-  handleUpdateTODO,handleViewCheckTodo,
+  handleUpdateTODO,handleViewCheckTodo,handleGetTodo
 } = require("../controllers/app");
 
 router.post("/", handleCreateNewTodo);
@@ -15,5 +15,5 @@ router.patch("/:id/completed", handleTodoToggleCompletion);
 router.delete("/:id", handleDeleteTodo);
 router.put("/:id", handleUpdateTODO);
 router.get("/get-all-todo",handleViewCheckTodo);
-
+router.get("/getTodo",handleGetTodo);
 module.exports = router;

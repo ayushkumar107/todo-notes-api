@@ -64,7 +64,7 @@ async function handleUpdateTODO(req, res) {
     if (!updateTodo) {
       return res.status(404).json({ msg: "todo not found" });
     }
-     
+
     return res
       .status(200)
       .json({ msg: "todo updated successfully", data: updateTodo });
@@ -73,49 +73,89 @@ async function handleUpdateTODO(req, res) {
       .status(404)
       .json({ msg: "error in updating TODO list", error: error.message });
   }
-};
+}
 
+async function handleViewCheckTodo(req, res) {
+  try {
+    const { completed } = req.query;
 
-async function handleViewCheckTodo(req,res) {
-  try{
+    let filter = {};
 
-    const {completed}=req.query;
-
-    let filter={};
-
-    if(completed !==undefined){
-      filter.isCompleted=completed==="true";
+    if (completed !== undefined) {
+      filter.isCompleted = completed === "true";
     }
 
-    const allTodo=await List.find(filter);
+    const allTodo = await List.find(filter);
 
-    return res.status(200).json({msg:"filtered todo list successfully..",data:allTodo})
-
-  }catch(error){
-    return res.status(404).json({msg:"error in fetching todo",error:error.message});
+    return res
+      .status(200)
+      .json({ msg: "filtered todo list successfully..", data: allTodo });
+  } catch (error) {
+    return res
+      .status(404)
+      .json({ msg: "error in fetching todo", error: error.message });
   }
-};
+}
 
-
-async function handleGetTodo(req,res){
-  try{
-    const {completed,page=1,limit=5}=req.query;
-    if(completed !==undefined){
-      filter.isCompleted=completed==="true";
-    
+async function handleGetTodo(req, res) {
+  try {
+    const { completed, page = 1, limit = 5 } = req.query;
+    if (completed !== undefined) {
+      filter.isCompleted = completed === "true";
     }
 
-    let filter={};
-    const skip=(page-1)*limit;
+    let filter = {};
+    const skip = (page - 1) * limit;
 
-    const allTodo=await List.find(filter).skip(skip).limit(limit);
-    
+    const allTodo = await List.find(filter).skip(skip).limit(limit);
+
     console.log(allTodo);
-    return res.status(200).json({msg:"paginated todo list fetched successfully",data:allTodo});
+    return res
+      .status(200)
+      .json({ msg: "paginated todo list fetched successfully", data: allTodo });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ msg: "error in fetching todo list", error: error.message });
+  }
+}
 
+async function handleGetSortTodo(req, res) {
+  try {
+    const { completed, page = 1, limit = 5, sort = "desc" } = req.query;
 
-  }catch(error){
-    return res.status(500).json({msg:"error in fetching todo list",error:error.message});
+    let filter = {};
+
+    if (completed !== undefined) {
+      filter.isCompleted = completed === "true";
+    }
+
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const sortValue = sort.toLowerCase();
+    const sortOrder = sortValue === "asc" ? 1 : -1;
+    const allTodo = await List.find(filter)
+      .skip(skip)
+      .limit(limitNumber)
+      .sort({ createdAt: sortOrder });
+
+    return res
+      .status(200)
+      .json({
+        msg: "Sorted & pagination and filtered Todo list",
+        currentPage: pageNumber,
+        limit: limitNumber,
+        count: allTodo.length,
+        sortOrder,
+        data: allTodo,
+      });
+  } catch {
+    return res
+      .status(500)
+      .json({ msg: "error while fetching todo ", error: error.message });
   }
 }
 
@@ -124,5 +164,7 @@ module.exports = {
   handleViewAllTODO,
   handleTodoToggleCompletion,
   handleDeleteTodo,
-  handleUpdateTODO,handleViewCheckTodo,handleGetTodo,
+  handleUpdateTODO,
+  handleViewCheckTodo,
+  handleGetTodo,handleGetSortTodo,
 };

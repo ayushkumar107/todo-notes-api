@@ -10,6 +10,7 @@ const {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
+  handleSearchTodo,
 } = require("../controllers/app");
 
 router.post("/", handleCreateNewTodo);
@@ -20,5 +21,6 @@ router.put("/:id", handleUpdateTODO);
 router.get("/get-all-todo", handleViewCheckTodo);
 router.get("/getTodo", handleGetTodo);
 router.get("/get-allTodo", handleGetSortTodo);
+router.get("/search", handleSearchTodo);
 
 module.exports = router;

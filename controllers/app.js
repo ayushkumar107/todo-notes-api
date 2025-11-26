@@ -142,20 +142,45 @@ async function handleGetSortTodo(req, res) {
       .limit(limitNumber)
       .sort({ createdAt: sortOrder });
 
-    return res
-      .status(200)
-      .json({
-        msg: "Sorted & pagination and filtered Todo list",
-        currentPage: pageNumber,
-        limit: limitNumber,
-        count: allTodo.length,
-        sortOrder,
-        data: allTodo,
-      });
+    return res.status(200).json({
+      msg: "Sorted & pagination and filtered Todo list",
+      currentPage: pageNumber,
+      limit: limitNumber,
+      count: allTodo.length,
+      sortOrder,
+      data: allTodo,
+    });
   } catch {
     return res
       .status(500)
       .json({ msg: "error while fetching todo ", error: error.message });
+  }
+}
+
+async function handleSearchTodo(req, res) {
+  try {
+    const {query} = req.query;
+
+    if (!query) {
+      return res
+        .status(400)
+        .json({ msg: "query parameter is required for searching.." });
+    }
+
+    const result = await List.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    return res
+      .status(200)
+      .json({ msg: "search results", count: result.length, data: result });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ msg: "error while searching TODO", error: error.message });
   }
 }
 
@@ -166,5 +191,7 @@ module.exports = {
   handleDeleteTodo,
   handleUpdateTODO,
   handleViewCheckTodo,
-  handleGetTodo,handleGetSortTodo,
+  handleGetTodo,
+  handleGetSortTodo,
+  handleSearchTodo,
 };

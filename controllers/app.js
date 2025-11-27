@@ -216,7 +216,30 @@ async function handleSoftDeleteTodo(req,res) {
   }catch(error){
     return res.status(500).json({msg:"error while deleting Todo list...",error:error.message});
   }
+};
+
+async function handleTodoRestore(req,res) {
+  try{
+
+    const id=req.params.id;
+    const restoreTodo=await List.findByIdAndUpdate(id,{isDeleted:false,deletedAt:null},{new:true});
+
+    if(!restoreTodo){
+      return res.status(400).json({msg:"Sorry Todo not founded..."})
+    }
+
+    return res.status(200).json({msg:"Todo restored successfully...",data:restoreTodo})
+
+
+
+  }catch(error){
+    return res.status(500).json({msg:"error in restoring todo list",error:error.message})
+
+  }
 }
+
+
+
 
 module.exports = {
   handleCreateNewTodo,
@@ -227,5 +250,5 @@ module.exports = {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,
+  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,
 };

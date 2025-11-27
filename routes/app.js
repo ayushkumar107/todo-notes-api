@@ -10,7 +10,7 @@ const {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,
+  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,
 } = require("../controllers/app");
 
 router.post("/", handleCreateNewTodo);
@@ -23,6 +23,7 @@ router.get("/getTodo", handleGetTodo);
 router.get("/get-allTodo", handleGetSortTodo);
 router.get("/search", handleSearchTodo);
 router.delete("/soft/:id",handleSoftDeleteTodo);
+router.patch("/restore/:id",handleTodoRestore);
 
 
 module.exports = router;

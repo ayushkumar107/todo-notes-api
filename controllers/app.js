@@ -16,8 +16,16 @@ async function handleCreateNewTodo(req, res) {
 }
 
 async function handleViewAllTODO(req, res) {
-  const allTodo = await List.find({});
-  return res.send(allTodo);
+  try{const allTodo = await List.find({isDeleted:false});
+
+  if(allTodo.length===0){
+    return res.status(404).json({msg:"no todo found"});
+  }
+
+  return res.status(200).json({msg:"all todo fetched successfully",data:allTodo});
+}catch(error){
+  return res.status(500).json({msg:"error while fetching todo",error:error.message});
+}
 }
 
 async function handleTodoToggleCompletion(req, res) {
@@ -182,6 +190,32 @@ async function handleSearchTodo(req, res) {
       .status(500)
       .json({ msg: "error while searching TODO", error: error.message });
   }
+};
+
+
+async function handleSoftDeleteTodo(req,res) {
+  try{
+    const id=req.params.id;
+    const todo=await List.findById(id);
+
+    if(!todo){
+      return res.status(400).json({msg:"Sorry Todo not founded..."})
+    }
+    if(todo.isDeleted){
+      return res.status(400).json({msg:"Todo is already deleted "})
+    }
+
+    todo.isDeleted=true;
+    todo.deletedAt=Date.now();
+
+    await todo.save();
+
+    return res.status(200).json({msg:"todo soft deleted successfully",data:todo})
+
+
+  }catch(error){
+    return res.status(500).json({msg:"error while deleting Todo list...",error:error.message});
+  }
 }
 
 module.exports = {
@@ -193,5 +227,5 @@ module.exports = {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,
+  handleSearchTodo,handleSoftDeleteTodo,
 };

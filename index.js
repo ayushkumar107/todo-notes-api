@@ -1,7 +1,9 @@
+require("dotenv").config();
+
 const express=require("express");
 const {connectDB}=require("./connection")
 const todoRouter=require("./routes/app")
-
+console.log(process.env.JWT_SECRET);
 
 const app=express();
 const PORT=6000;

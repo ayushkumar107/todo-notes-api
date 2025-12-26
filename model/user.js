@@ -12,13 +12,13 @@ const userSchema=new mongoose.Schema({
         lowerCase:true,
     },
     password:{
-        type:string,
+        type:String,
         required:true,
         minlength:6,
     },
 },{timestamps:true});
 
 
-const User=mongoose.model("user",userSchema);
+const User=mongoose.model("users",userSchema);
 
-module.export=User;
+module.exports=User;

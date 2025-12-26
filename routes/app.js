@@ -12,11 +12,13 @@ const {
   handleGetSortTodo,
   handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,
 } = require("../controllers/app");
+const authMiddleware=require("../middlewares/auth");
 
-router.post("/", handleCreateNewTodo);
-router.get("/", handleViewAllTODO);
+
+router.post("/",authMiddleware, handleCreateNewTodo);
+router.get("/",authMiddleware, handleViewAllTODO);
 router.patch("/:id/completed", handleTodoToggleCompletion);
-router.delete("/:id", handleDeleteTodo);
+router.delete("/:id",authMiddleware, handleDeleteTodo);
 router.put("/:id", handleUpdateTODO);
 router.get("/get-all-todo", handleViewCheckTodo);
 router.get("/getTodo", handleGetTodo);

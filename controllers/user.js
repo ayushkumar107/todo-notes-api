@@ -29,9 +29,10 @@ async function handleUserSignUP(req, res) {
       .status(201)
       .json({ msg: "user registered successfully", data: newUser });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
-      .json({ msg: "error while signing up", error: error.msg });
+      .json({ msg: "error while signing up", error: error.massage });
   }
 }
 

@@ -3,7 +3,9 @@ require("dotenv").config();
 const express=require("express");
 const {connectDB}=require("./connection")
 const todoRouter=require("./routes/app")
+const userRouter=require("./routes/user");
 console.log(process.env.JWT_SECRET);
+
 
 const app=express();
 const PORT=6000;
@@ -21,7 +23,7 @@ app.use(express.json());
 
 //routes
 
-
+app.use("/api/users",userRouter);
 app.use("/api/notes",todoRouter);
 
 

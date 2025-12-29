@@ -7,6 +7,7 @@ async function handleCreateNewTodo(req, res) {
     title,
     description,
     isCompleted: false,
+    createdBy:req.user.userId,
   });
 
   console.log(newTodo);
@@ -16,7 +17,7 @@ async function handleCreateNewTodo(req, res) {
 }
 
 async function handleViewAllTODO(req, res) {
-  try{const allTodo = await List.find({isDeleted:false});
+  try{const allTodo = await List.find({createdBy:req.user.userId, isDeleted:false,});
 
   if(allTodo.length===0){
     return res.status(404).json({msg:"no todo found"});
@@ -50,6 +51,12 @@ async function handleDeleteTodo(req, res) {
       return res.status(404).json({ msg: "TODO not founded..." });
     }
 
+    if(todo.createdBy.toString() !==req.user.userId){
+      return res.status(403).json({msg:"you are not authorized to delete this todo"});
+    }
+    todo.isDeleted=true;
+    todo.deletedAt=new Date();
+    await todo.save();
     return res
       .status(200)
       .json({ msg: "TODO deleted successfully", deleteTODO });

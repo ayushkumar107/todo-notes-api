@@ -46,8 +46,8 @@ async function handleTodoToggleCompletion(req, res) {
 
 async function handleDeleteTodo(req, res) {
   try {
-    const deleteTODO = await List.findByIdAndDelete(req.params.id);
-    if (!deleteTODO) {
+    const todo = await List.findById(req.params.id);
+    if (!todo) {
       return res.status(404).json({ msg: "TODO not founded..." });
     }
 
@@ -59,7 +59,7 @@ async function handleDeleteTodo(req, res) {
     await todo.save();
     return res
       .status(200)
-      .json({ msg: "TODO deleted successfully", deleteTODO });
+      .json({ msg: "TODO deleted successfully", data: todo });
   } catch (error) {
     return res
       .status(500)

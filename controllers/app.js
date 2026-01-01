@@ -242,7 +242,8 @@ async function handleTodoRestore(req,res) {
     }
     restoreTodo.isDeleted=false;
     restoreTodo.deletedAt=null;
-    
+    await restoreTodo.save();
+
 
     return res.status(200).json({msg:"Todo restored successfully...",data:restoreTodo})
 

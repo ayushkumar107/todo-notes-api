@@ -25,7 +25,7 @@ router.get("/getTodo", handleGetTodo);
 router.get("/get-allTodo", handleGetSortTodo);
 router.get("/search", handleSearchTodo);
 router.delete("/soft/:id",handleSoftDeleteTodo);
-router.patch("/restore/:id",handleTodoRestore);
+router.patch("/restore/:id",authMiddleware,handleTodoRestore);
 
 
 module.exports = router;

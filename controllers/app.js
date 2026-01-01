@@ -229,11 +229,20 @@ async function handleTodoRestore(req,res) {
   try{
 
     const id=req.params.id;
-    const restoreTodo=await List.findByIdAndUpdate(id,{isDeleted:false,deletedAt:null},{new:true});
+    const restoreTodo=await List.findById(req.params.id);
 
     if(!restoreTodo){
       return res.status(400).json({msg:"Sorry Todo not founded..."})
     }
+    if(restoreTodo.createdBy.toString() !== req.user.userId){
+      return res.status(403).json({msg:"you are not authorized to restore this todo"})
+    }
+    if(!restoreTodo.isDeleted){
+      return res.status(400).json({msg:"todo is already active "})
+    }
+    restoreTodo.isDeleted=false;
+    restoreTodo.deletedAt=null;
+    
 
     return res.status(200).json({msg:"Todo restored successfully...",data:restoreTodo})
 

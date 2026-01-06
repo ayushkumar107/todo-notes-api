@@ -10,7 +10,7 @@ const {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,
+  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,handleTrashView,
 } = require("../controllers/app");
 const authMiddleware=require("../middlewares/auth");
 
@@ -26,6 +26,7 @@ router.get("/get-allTodo", handleGetSortTodo);
 router.get("/search", handleSearchTodo);
 router.delete("/soft/:id",handleSoftDeleteTodo);
 router.patch("/restore/:id",authMiddleware,handleTodoRestore);
+router.get("/trashed",authMiddleware,handleTrashView);
 
 
 module.exports = router;

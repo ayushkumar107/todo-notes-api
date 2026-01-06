@@ -255,6 +255,21 @@ async function handleTodoRestore(req,res) {
   }
 }
 
+async function handleTrashView(req,res) {
+ try{
+   const trashTodo= await List.find({createdBy:req.user.userId,isDeleted:true})
+  if(trashTodo.length==0){
+    return res.status(200).json({msg:"no trashed todo...",count:0,trashTodo:[]});
+  }
+  return res.status(200).json({msg:"here is the trashed todo list",count:trashTodo.length,data:trashTodo})
+  
+  
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({msg:"error while searching trashed Todo list",error:error.msg});
+  }
+}
+
 
 
 
@@ -267,5 +282,5 @@ module.exports = {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,
+  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,handleTrashView,
 };

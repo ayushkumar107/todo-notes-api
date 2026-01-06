@@ -23,7 +23,7 @@ async function handleViewAllTODO(req, res) {
     return res.status(404).json({msg:"no todo found"});
   }
 
-  return res.status(200).json({msg:"all todo fetched successfully",data:allTodo});
+  return res.status(200).json({msg:"all todo fetched successfully",count:allTodo.length,data:allTodo});
 }catch(error){
   return res.status(500).json({msg:"error while fetching todo",error:error.message});
 }
@@ -200,24 +200,25 @@ async function handleSearchTodo(req, res) {
 };
 
 
-async function handleSoftDeleteTodo(req,res) {
+async function handleHardDeleteTodo(req,res) {
   try{
     const id=req.params.id;
-    const todo=await List.findById(id);
+    const todo=await List.findById(id);  
 
+   
     if(!todo){
       return res.status(400).json({msg:"Sorry Todo not founded..."})
+    } 
+    if( todo.createdBy.toString()===req.user.userId){
+      return res.status(403).json({msg:"you are not authorized to delete this todo"})
+    };
+    if(!todo.isDeleted){
+      return res.status(400).json({msg:"Todo must be soft deleted brfore hard delete "})
     }
-    if(todo.isDeleted){
-      return res.status(400).json({msg:"Todo is already deleted "})
-    }
 
-    todo.isDeleted=true;
-    todo.deletedAt=Date.now();
+    await List.findByIdAndDelete(id);
 
-    await todo.save();
-
-    return res.status(200).json({msg:"todo soft deleted successfully",data:todo})
+    return res.status(200).json({msg:"todo hard deleted successfully",data:todo})
 
 
   }catch(error){
@@ -282,5 +283,5 @@ module.exports = {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,handleTrashView,
+  handleSearchTodo,handleHardDeleteTodo,handleTodoRestore,handleTrashView,
 };

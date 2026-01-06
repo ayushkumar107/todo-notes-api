@@ -10,7 +10,7 @@ const {
   handleViewCheckTodo,
   handleGetTodo,
   handleGetSortTodo,
-  handleSearchTodo,handleSoftDeleteTodo,handleTodoRestore,handleTrashView,
+  handleSearchTodo,handleHardDeleteTodo,handleTodoRestore,handleTrashView,
 } = require("../controllers/app");
 const authMiddleware=require("../middlewares/auth");
 
@@ -18,13 +18,13 @@ const authMiddleware=require("../middlewares/auth");
 router.post("/",authMiddleware, handleCreateNewTodo);
 router.get("/",authMiddleware, handleViewAllTODO);
 router.patch("/:id/completed", handleTodoToggleCompletion);
-router.delete("/:id",authMiddleware, handleDeleteTodo);
+router.delete("/soft/:id",authMiddleware, handleDeleteTodo);
 router.put("/:id", handleUpdateTODO);
 router.get("/get-all-todo", handleViewCheckTodo);
 router.get("/getTodo", handleGetTodo);
 router.get("/get-allTodo", handleGetSortTodo);
 router.get("/search", handleSearchTodo);
-router.delete("/soft/:id",handleSoftDeleteTodo);
+router.delete("/hard/:id",authMiddleware,handleHardDeleteTodo);
 router.patch("/restore/:id",authMiddleware,handleTodoRestore);
 router.get("/trashed",authMiddleware,handleTrashView);
 

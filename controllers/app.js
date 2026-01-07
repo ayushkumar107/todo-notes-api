@@ -209,7 +209,7 @@ async function handleHardDeleteTodo(req,res) {
     if(!todo){
       return res.status(400).json({msg:"Sorry Todo not founded..."})
     } 
-    if( todo.createdBy.toString()===req.user.userId){
+    if( todo.createdBy.toString()!==req.user.userId){
       return res.status(403).json({msg:"you are not authorized to delete this todo"})
     };
     if(!todo.isDeleted){
